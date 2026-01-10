@@ -1,1 +1,0 @@
-print("This is question 2 by bhupraj.")
