@@ -16,3 +16,24 @@ def check_folder_exists(folder_path):
     """
     if not os.path.exists(folder_path):
         raise FileNotFoundError(f"Folder '{folder_path}' not found!")
+
+
+def get_csv_files(folder_path):
+    """
+    Get all CSV files from the folder.
+    
+    Args:
+        folder_path: Path to search for CSV files
+        
+    Returns:
+        List of CSV file paths
+        
+    Raises:
+        FileNotFoundError: If no CSV files found
+    """
+    csv_files = list(Path(folder_path).glob('*.csv'))
+    
+    if not csv_files:
+        raise FileNotFoundError(f"No CSV files found in '{folder_path}'!")
+    
+    return csv_files
