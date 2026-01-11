@@ -33,8 +33,26 @@ def get_csv_files(folder_path):
     """
     csv_files = list(Path(folder_path).glob('*.csv'))
     
-    #This helps to resolve path issue.
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in '{folder_path}'!")
     
     return csv_files
+
+
+def load_single_csv(file_path):
+    """
+    Load a single CSV file.
+    
+    Args:
+        file_path: Path to CSV file
+        
+    Returns:
+        DataFrame with data, or None if loading fails
+    """
+    try:
+        df = pd.read_csv(file_path)
+        print(f"  ✓ Loaded: {file_path.name} ({len(df)} stations)")
+        return df
+    except Exception as e:
+        print(f"  ✗ Warning: Could not load {file_path.name}: {e}")
+        return None
