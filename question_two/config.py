@@ -22,3 +22,12 @@ SEASON_MAPPING = {
     'November': 'Spring',
     'December': 'Summer'
 }
+
+# Month columns expected in CSV files
+MONTH_COLUMNS = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+]
+
+# Season order for output
+SEASON_ORDER = ['Summer', 'Autumn', 'Winter', 'Spring']
