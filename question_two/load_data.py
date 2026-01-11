@@ -56,3 +56,36 @@ def load_single_csv(file_path):
     except Exception as e:
         print(f"  ✗ Warning: Could not load {file_path.name}: {e}")
         return None
+
+
+def load_all_temperature_data():
+    """
+    Load all CSV files from temperatures folder and combine them.
+    
+    Returns:
+        Combined DataFrame with all temperature data
+    """
+    print(f"Loading data from '{TEMPERATURES_FOLDER}'...")
+    
+    # Check folder exists
+    check_folder_exists(TEMPERATURES_FOLDER)
+    
+    # Get all CSV files
+    csv_files = get_csv_files(TEMPERATURES_FOLDER)
+    print(f"Found {len(csv_files)} CSV file(s)")
+    
+    # Load each file
+    all_data = []
+    for file_path in csv_files:
+        df = load_single_csv(file_path)
+        if df is not None:
+            all_data.append(df)
+    
+    if not all_data:
+        raise ValueError("No data could be loaded!")
+    
+    # Combine all DataFrames
+    combined_df = pd.concat(all_data, ignore_index=True)
+    print(f"Total stations loaded: {len(combined_df)}\n")
+    
+    return combined_df
