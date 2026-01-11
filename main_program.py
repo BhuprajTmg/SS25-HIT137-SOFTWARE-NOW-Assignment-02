@@ -6,7 +6,7 @@ def verify(original_text, decrypted_text):
     decrypted_norm = ' '.join(decrypted_text.split())
     
     if original_norm == decrypted_norm:
-        print("Yay! Decryption worked, it matches the original text.")
+        print("Decryption worked, it matches the original text.")
     else:
         print("Decryption failed! Text does not match original.")
 
