@@ -1,8 +1,3 @@
-"""
-Configuration file for Temperature Analysis Program
-Contains all constants and settings
-"""
-
 # Folder paths
 TEMPERATURES_FOLDER = "temperatures"
 OUTPUT_FOLDER = "output"
@@ -11,3 +6,19 @@ OUTPUT_FOLDER = "output"
 OUTPUT_SEASONAL_AVG = "output/average_temp.txt"
 OUTPUT_TEMP_RANGE = "output/largest_temp_range_station.txt"
 OUTPUT_TEMP_STABILITY = "output/temperature_stability_stations.txt"
+
+# Australian Seasons Definition
+SEASON_MAPPING = {
+    'January': 'Summer',
+    'February': 'Summer',
+    'March': 'Autumn',
+    'April': 'Autumn',
+    'May': 'Autumn',
+    'June': 'Winter',
+    'July': 'Winter',
+    'August': 'Winter',
+    'September': 'Spring',
+    'October': 'Spring',
+    'November': 'Spring',
+    'December': 'Summer'
+}
