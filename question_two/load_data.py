@@ -33,6 +33,7 @@ def get_csv_files(folder_path):
     """
     csv_files = list(Path(folder_path).glob('*.csv'))
     
+    #This helps to resolve path issue.
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in '{folder_path}'!")
     
