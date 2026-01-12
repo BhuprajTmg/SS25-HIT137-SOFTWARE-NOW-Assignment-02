@@ -35,6 +35,38 @@ def validate_file_writable(filepath):
         )
 
 
+# def save_seasonal_averages(seasonal_avg, output_file):
+#     """
+#     Write seasonal averages to file in specified format.
+    
+#     Args:
+#         seasonal_avg: Dictionary of seasonal averages
+#         output_file: Output file path
+        
+#     Raises:
+#         ValueError: If seasonal_avg is invalid
+#         OSError: If file write fails
+#     """
+#     if not isinstance(seasonal_avg, dict):
+#         raise ValueError("seasonal_avg must be a dictionary")
+    
+#     ensure_output_directory(output_file)
+#     validate_file_writable(output_file)
+    
+#     try:
+#         with open(output_file, 'w') as f:
+#             for season in SEASON_ORDER:
+#                 temp = seasonal_avg.get(season)
+#                 if temp is not None:
+#                     f.write(f"{season}: {temp:.{OUTPUT_PRECISION}f}°C\n")
+#                 else:
+#                     f.write(f"{season}: No data\n")
+#     except IOError as e:
+#         raise OSError(f"Failed to write {output_file}: {e}")
+    
+#     print(f"✓ Saved: {output_file}")
+
+
 def save_seasonal_averages(seasonal_avg, output_file):
     """
     Write seasonal averages to file in specified format.
@@ -54,7 +86,7 @@ def save_seasonal_averages(seasonal_avg, output_file):
     validate_file_writable(output_file)
     
     try:
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding='utf-8') as f: 
             for season in SEASON_ORDER:
                 temp = seasonal_avg.get(season)
                 if temp is not None:
@@ -89,7 +121,7 @@ def save_range_results(range_stations, output_file):
     validate_file_writable(output_file)
     
     try:
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding='utf-8') as f:
             for station_info in range_stations:
                 station = station_info['station']
                 temp_range = station_info['range']
@@ -132,7 +164,7 @@ def save_stability_results(stable_stations, variable_stations, output_file):
     validate_file_writable(output_file)
     
     try:
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding='utf-8') as f:
             for station_info in stable_stations:
                 station = station_info['station']
                 std = station_info['std']
