@@ -21,3 +21,15 @@ def print_header():
     print(" " * 18 + "Temperature Analysis Program")
     print("=" * 70)
     print()
+
+
+def print_footer():
+    """Print success footer."""
+    print("=" * 70)
+    print("✓ Analysis Complete!")
+    print()
+    print("Output files created:")
+    print(f"  • {OUTPUT_SEASONAL_AVG}")
+    print(f"  • {OUTPUT_TEMP_RANGE}")
+    print(f"  • {OUTPUT_TEMP_STABILITY}")
+    print("=" * 70)
