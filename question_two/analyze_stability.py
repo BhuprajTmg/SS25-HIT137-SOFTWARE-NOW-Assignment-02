@@ -1,5 +1,4 @@
-import pandas as pd
-
+import pandas as pd1
 
 def calculate_station_std(long_df):
     """
@@ -40,6 +39,33 @@ def find_most_stable(station_std):
         results.append({'station': station, 'std': std})
     
     return results
+
+
+def analyze_temperature_stability(long_df):
+    """
+    Analyze temperature stability across all stations.
+    
+    Args:
+        long_df: DataFrame in long format
+        
+    Returns:
+        Tuple of (most_stable, most_variable) lists
+    """
+    print("Analyzing temperature stability...")
+    
+    # Calculate standard deviations
+    station_std = calculate_station_std(long_df)
+    
+    # Find most stable
+    stable = find_most_stable(station_std)
+    print(f"  Most Stable: {', '.join([s['station'] for s in stable])}")
+    
+    # Find most variable
+    variable = find_most_variable(station_std)
+    print(f"  Most Variable: {', '.join([v['station'] for v in variable])}")
+    
+    print()
+    return stable, variable
 
 
 def find_most_variable(station_std):
