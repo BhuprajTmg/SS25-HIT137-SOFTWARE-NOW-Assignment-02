@@ -1,38 +1,40 @@
 import pandas as pd
-from config import MONTH_COLUMNS
+from config import MONTH_COLUMNS, STATION_COLUMN_NAMES
 
 
-def find_station_column(df):
+def identify_station_column(df):
     """
-    Find the station identifier column in the DataFrame.
+    Identify station column to handle varying CSV formats.
     
     Args:
         df: Input DataFrame
         
     Returns:
-        Name of the station column
+        Name of the station identifier column
         
     Raises:
-        ValueError: If no station column found
+        ValueError: If no valid station column found
     """
-    possible_names = ['STATION_NAME', 'Station', 'STN_ID', 'station_name']
+    for column_name in STATION_COLUMN_NAMES:
+        if column_name in df.columns:
+            return column_name
     
-    for col_name in possible_names:
-        if col_name in df.columns:
-            return col_name
-    
-    raise ValueError("Could not find station column!")
+    raise ValueError(
+        f"Could not identify station column. "
+        f"Expected one of: {STATION_COLUMN_NAMES}. "
+        f"Found columns: {list(df.columns)}"
+    )
 
 
-def get_available_months(df):
+def validate_month_columns(df):
     """
-    Get list of month columns that exist in the DataFrame.
+    Validate presence of month columns to ensure data quality.
     
     Args:
         df: Input DataFrame
         
     Returns:
-        List of month column names
+        List of available month columns
         
     Raises:
         ValueError: If no month columns found
@@ -40,51 +42,62 @@ def get_available_months(df):
     available_months = [col for col in MONTH_COLUMNS if col in df.columns]
     
     if not available_months:
-        raise ValueError(f"No month columns found! Expected: {MONTH_COLUMNS}")
+        raise ValueError(
+            f"No month columns found in CSV. "
+            f"Expected: {MONTH_COLUMNS}. "
+            f"Found: {list(df.columns)}"
+        )
+    
+    # Warn if some months are missing to alert user of incomplete data
+    missing_months = set(MONTH_COLUMNS) - set(available_months)
+    if missing_months:
+        print(f"  ⚠ Note: Missing month columns: {missing_months}")
     
     return available_months
 
 
 def transform_to_long_format(df):
     """
-    Transform data from wide format to long format.
-    
-    Wide format: Each row is a station, months are columns
-    Long format: Each row is one temperature reading
+    Transform wide format to long format for easier analysis.
+    Wide: Each row = station, months = columns
+    Long: Each row = one temperature reading
     
     Args:
         df: DataFrame in wide format
         
     Returns:
-        DataFrame in long format with columns: Station, Month, Temperature
+        DataFrame in long format (Station, Month, Temperature)
+        
+    Raises:
+        ValueError: If transformation fails due to data issues
     """
     print("Transforming data to long format...")
     
-    # Find station column
-    station_col = find_station_column(df)
+    station_col = identify_station_column(df)
+    month_cols = validate_month_columns(df)
     
-    # Get available month columns
-    month_cols = get_available_months(df)
+    try:
+        long_df = pd.melt(
+            df,
+            id_vars=[station_col],
+            value_vars=month_cols,
+            var_name='Month',
+            value_name='Temperature'
+        )
+    except KeyError as e:
+        raise ValueError(f"Column error during transformation: {e}")
     
-    # Melt the DataFrame
-    long_df = pd.melt(
-        df,
-        id_vars=[station_col],
-        value_vars=month_cols,
-        var_name='Month',
-        value_name='Temperature'
-    )
-    
-    # Rename station column
     long_df = long_df.rename(columns={station_col: 'Station'})
     
-    # Remove NaN temperatures
     initial_count = len(long_df)
     long_df = long_df.dropna(subset=['Temperature'])
-    removed = initial_count - len(long_df)
+    removed_count = initial_count - len(long_df)
     
-    if removed > 0:
-        print(f"  Removed {removed} records with missing temperatures")
+    if removed_count > 0:
+        print(f"  Removed {removed_count} records with missing temperatures")
+    
+    if long_df.empty:
+        raise ValueError("No valid temperature data after transformation")
     
     print(f"  Transformed: {len(long_df)} temperature records\n")
     
