@@ -35,6 +35,35 @@ def save_seasonal_averages(seasonal_avg, output_file):
     print(f"✓ Saved: {output_file}")
 
 
+def save_stability_results(stable_stations, variable_stations, output_file):
+    """
+    Save temperature stability results to file.
+    Format: "Most Stable: Station XXX: StdDev XX.X°C"
+            "Most Variable: Station XXX: StdDev XX.X°C"
+    
+    Args:
+        stable_stations: List of most stable stations
+        variable_stations: List of most variable stations
+        output_file: Path to output file
+    """
+    ensure_output_folder(output_file)
+    
+    with open(output_file, 'w') as f:
+        # Write most stable
+        for station_info in stable_stations:
+            station = station_info['station']
+            std = station_info['std']
+            f.write(f"Most Stable: Station {station}: StdDev {std:.1f}°C\n")
+        
+        # Write most variable
+        for station_info in variable_stations:
+            station = station_info['station']
+            std = station_info['std']
+            f.write(f"Most Variable: Station {station}: StdDev {std:.1f}°C\n")
+    
+    print(f"✓ Saved: {output_file}")
+
+
 def save_range_results(range_stations, output_file):
     """
     Save temperature range results to file.
