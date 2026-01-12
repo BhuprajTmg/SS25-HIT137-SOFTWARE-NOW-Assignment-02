@@ -36,6 +36,11 @@ def main():
         # Step 1: Load data
         print("[Step 1/5] Loading temperature data...")
         df = load_all_temperature_data()
+        
+        # Step 2: Transform data
+        print("[Step 2/5] Transforming data...")
+        long_df = transform_to_long_format(df)
+
 
 
 
