@@ -1,3 +1,8 @@
+"""
+Main entry point for Temperature Analysis Program
+Orchestrates the complete analysis workflow
+"""
+
 from load_data import load_all_temperature_data
 from transform_data import transform_to_long_format
 from analyze_seasonal import calculate_seasonal_averages
@@ -18,6 +23,20 @@ from config import (
 def print_header():
     """Print program header."""
     print("=" * 70)
+
+
+def main():
+    """
+    Main execution function.
+    Coordinates all analysis steps.
+    """
+    try:
+        print_header()
+        
+        # Step 1: Load data
+        print("[Step 1/5] Loading temperature data...")
+        df = load_all_temperature_data()
+
 
 
 def handle_error(error):
