@@ -40,3 +40,23 @@ def find_most_stable(station_std):
         results.append({'station': station, 'std': std})
     
     return results
+
+
+def find_most_variable(station_std):
+    """
+    Find station(s) with highest standard deviation (most variable).
+    
+    Args:
+        station_std: Series of standard deviations
+        
+    Returns:
+        List of dictionaries with station and std
+    """
+    max_std = station_std.max()
+    most_variable = station_std[station_std == max_std]
+    
+    results = []
+    for station, std in most_variable.items():
+        results.append({'station': station, 'std': std})
+    
+    return results
