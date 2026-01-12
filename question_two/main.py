@@ -15,84 +15,16 @@ from config import (
 )
 
 
-def print_header():
-    """Print program header."""
-    print("=" * 70)
-
-
-def main():
-    """
-    Main execution function.
-    Coordinates all analysis steps.
-    """
-    try:
-        print_header()
-        
-        # Step 1: Load data
-        print("[Step 1/5] Loading temperature data...")
-        df = load_all_temperature_data()
-        
-        # Step 2: Transform data
-        print("[Step 2/5] Transforming data...")
-        long_df = transform_to_long_format(df)
-        
-        # Step 3: Seasonal averages
-        print("[Step 3/5] Analyzing seasonal averages...")
-        seasonal_avg = calculate_seasonal_averages(long_df.copy())
-        save_seasonal_averages(seasonal_avg, OUTPUT_SEASONAL_AVG)
-        print()
-        
-        # Step 4: Temperature range
-        print("[Step 4/5] Finding largest temperature ranges...")
-        range_stations = find_largest_range_stations(long_df.copy())
-        save_range_results(range_stations, OUTPUT_TEMP_RANGE)
-        print()
-        
-        # Step 5: Temperature stability
-        print("[Step 5/5] Analyzing temperature stability...")
-        stable, variable = analyze_temperature_stability(long_df.copy())
-        save_stability_results(stable, variable, OUTPUT_TEMP_STABILITY)
-        print()
-        
-        print_footer()
-        
-    except Exception as e:
-        handle_error(e)
-
-
-if __name__ == "__main__":
-    main()
-
-
-
-
-
-
-
-def handle_error(error):
-    """
-    Handle and display errors appropriately.
-    
-    Args:
-        error: The exception that occurred
-    """
-    print("\n" + "=" * 70)
-    print("✗ Error occurred!")
-    print("=" * 70)
-    print(f"\nError: {error}")
-    print("\nPlease check:")
-    print("  1. 'temperatures' folder exists")
-    print("  2. CSV files are present")
-    print("  3. CSV files have correct format")
-    print("  4. Required columns: STATION_NAME, January-December")
+def display_header():
+    """Display program header for user feedback."""
     print("=" * 70)
     print(" " * 18 + "Temperature Analysis Program")
     print("=" * 70)
     print()
 
 
-def print_footer():
-    """Print success footer."""
+def display_footer():
+    """Display success message with output file locations."""
     print("=" * 70)
     print("✓ Analysis Complete!")
     print()
@@ -101,3 +33,80 @@ def print_footer():
     print(f"  • {OUTPUT_TEMP_RANGE}")
     print(f"  • {OUTPUT_TEMP_STABILITY}")
     print("=" * 70)
+
+
+def display_error(error):
+    """
+    Display formatted error message with troubleshooting guidance.
+    
+    Args:
+        error: The exception that occurred
+    """
+    print("\n" + "=" * 70)
+    print("✗ Error Occurred!")
+    print("=" * 70)
+    print(f"\nError: {error}")
+    print("\nTroubleshooting:")
+    print("  1. Verify 'temperatures' folder exists in current directory")
+    print("  2. Ensure CSV files are present in 'temperatures' folder")
+    print("  3. Check CSV format: STATION_NAME, January-December columns")
+    print("  4. Verify you have write permissions for 'output' folder")
+    print("=" * 70)
+
+
+def execute_analysis_workflow():
+    """
+    Execute the complete analysis workflow.
+    Separated to enable easier testing and maintenance.
+    
+    Raises:
+        Various exceptions if any step fails
+    """
+    display_header()
+    
+    print("[Step 1/5] Loading temperature data...")
+    raw_data = load_all_temperature_data()
+    
+    print("[Step 2/5] Transforming data...")
+    long_format_data = transform_to_long_format(raw_data)
+    
+    print("[Step 3/5] Analyzing seasonal averages...")
+    seasonal_averages = calculate_seasonal_averages(long_format_data.copy())
+    save_seasonal_averages(seasonal_averages, OUTPUT_SEASONAL_AVG)
+    print()
+    
+    print("[Step 4/5] Finding largest temperature ranges...")
+    range_results = find_largest_range_stations(long_format_data.copy())
+    save_range_results(range_results, OUTPUT_TEMP_RANGE)
+    print()
+    
+    print("[Step 5/5] Analyzing temperature stability...")
+    stable_stations, variable_stations = analyze_temperature_stability(
+        long_format_data.copy()
+    )
+    save_stability_results(stable_stations, variable_stations, OUTPUT_TEMP_STABILITY)
+    print()
+    
+    display_footer()
+
+
+def main():
+    """
+    Main execution function with comprehensive error handling.
+    """
+    try:
+        execute_analysis_workflow()
+    except FileNotFoundError as e:
+        display_error(f"File/Folder not found: {e}")
+    except ValueError as e:
+        display_error(f"Data validation error: {e}")
+    except PermissionError as e:
+        display_error(f"Permission error: {e}")
+    except OSError as e:
+        display_error(f"System error: {e}")
+    except Exception as e:
+        display_error(f"Unexpected error: {e}")
+
+
+if __name__ == "__main__":
+    main()
