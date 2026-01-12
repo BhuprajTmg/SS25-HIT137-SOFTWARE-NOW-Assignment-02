@@ -1,13 +1,14 @@
-# Folder paths
+# Directory paths
 TEMPERATURES_FOLDER = "temperatures"
 OUTPUT_FOLDER = "output"
 
-# Output file names
+# Output file paths
 OUTPUT_SEASONAL_AVG = "output/average_temp.txt"
 OUTPUT_TEMP_RANGE = "output/largest_temp_range_station.txt"
 OUTPUT_TEMP_STABILITY = "output/temperature_stability_stations.txt"
 
-# Australian Seasons Definition
+# Season mapping for Australian climate zones
+# Southern hemisphere seasons differ from northern hemisphere
 SEASON_MAPPING = {
     'January': 'Summer',
     'February': 'Summer',
@@ -23,11 +24,17 @@ SEASON_MAPPING = {
     'December': 'Summer'
 }
 
-# Month columns expected in CSV files
+# Expected month columns in CSV files
 MONTH_COLUMNS = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
 ]
 
-# Season order for output
+# Output order for consistent reporting
 SEASON_ORDER = ['Summer', 'Autumn', 'Winter', 'Spring']
+
+# Possible station identifier column names for flexibility
+STATION_COLUMN_NAMES = ['STATION_NAME', 'Station', 'STN_ID', 'station_name', 'StationName']
+
+# Decimal precision for output formatting
+OUTPUT_PRECISION = 1
