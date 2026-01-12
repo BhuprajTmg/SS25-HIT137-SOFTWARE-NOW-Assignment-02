@@ -47,6 +47,22 @@ def main():
         range_stations = find_largest_range_stations(long_df.copy())
         save_range_results(range_stations, OUTPUT_TEMP_RANGE)
         print()
+        
+        # Step 5: Temperature stability
+        print("[Step 5/5] Analyzing temperature stability...")
+        stable, variable = analyze_temperature_stability(long_df.copy())
+        save_stability_results(stable, variable, OUTPUT_TEMP_STABILITY)
+        print()
+        
+        print_footer()
+        
+    except Exception as e:
+        handle_error(e)
+
+
+if __name__ == "__main__":
+    main()
+
 
 
 
