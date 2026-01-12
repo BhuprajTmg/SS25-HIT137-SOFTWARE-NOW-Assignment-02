@@ -18,6 +18,25 @@ from config import (
 def print_header():
     """Print program header."""
     print("=" * 70)
+
+
+def handle_error(error):
+    """
+    Handle and display errors appropriately.
+    
+    Args:
+        error: The exception that occurred
+    """
+    print("\n" + "=" * 70)
+    print("✗ Error occurred!")
+    print("=" * 70)
+    print(f"\nError: {error}")
+    print("\nPlease check:")
+    print("  1. 'temperatures' folder exists")
+    print("  2. CSV files are present")
+    print("  3. CSV files have correct format")
+    print("  4. Required columns: STATION_NAME, January-December")
+    print("=" * 70)
     print(" " * 18 + "Temperature Analysis Program")
     print("=" * 70)
     print()
