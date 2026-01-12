@@ -33,3 +33,28 @@ def save_seasonal_averages(seasonal_avg, output_file):
                 f.write(f"{season}: No data\n")
     
     print(f"✓ Saved: {output_file}")
+
+
+def save_range_results(range_stations, output_file):
+    """
+    Save temperature range results to file.
+    Format: "Station XXX: Range XX.X°C (Max: XX.X°C, Min: XX.X°C)"
+    
+    Args:
+        range_stations: List of dictionaries with station info
+        output_file: Path to output file
+    """
+    ensure_output_folder(output_file)
+    
+    with open(output_file, 'w') as f:
+        for station_info in range_stations:
+            station = station_info['station']
+            temp_range = station_info['range']
+            max_temp = station_info['max']
+            min_temp = station_info['min']
+            
+            line = (f"Station {station}: Range {temp_range:.1f}°C "
+                   f"(Max: {max_temp:.1f}°C, Min: {min_temp:.1f}°C)\n")
+            f.write(line)
+    
+    print(f"✓ Saved: {output_file}")
