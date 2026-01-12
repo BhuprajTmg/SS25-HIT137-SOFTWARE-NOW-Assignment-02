@@ -1,8 +1,3 @@
-"""
-Main entry point for Temperature Analysis Program
-Orchestrates the complete analysis workflow
-"""
-
 from load_data import load_all_temperature_data
 from transform_data import transform_to_long_format
 from analyze_seasonal import calculate_seasonal_averages
@@ -40,6 +35,13 @@ def main():
         # Step 2: Transform data
         print("[Step 2/5] Transforming data...")
         long_df = transform_to_long_format(df)
+        
+        # Step 3: Seasonal averages
+        print("[Step 3/5] Analyzing seasonal averages...")
+        seasonal_avg = calculate_seasonal_averages(long_df.copy())
+        save_seasonal_averages(seasonal_avg, OUTPUT_SEASONAL_AVG)
+        print()
+
 
 
 
