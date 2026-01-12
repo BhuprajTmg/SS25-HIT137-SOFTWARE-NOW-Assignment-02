@@ -1,50 +1,81 @@
 import pandas as pd
+from config import OUTPUT_PRECISION
 
 
-def calculate_station_ranges(long_df):
+def validate_temperature_data(df):
     """
-    Calculate temperature range for each station.
-    Range = Maximum temperature - Minimum temperature
+    Validate DataFrame for temperature range analysis.
     
     Args:
-        long_df: DataFrame in long format
+        df: DataFrame to validate
+        
+    Raises:
+        ValueError: If data is invalid for analysis
+    """
+    required_cols = ['Station', 'Temperature']
+    missing = [col for col in required_cols if col not in df.columns]
+    
+    if missing:
+        raise ValueError(f"Missing required columns: {missing}")
+    
+    if df.empty:
+        raise ValueError("No data available for range analysis")
+
+
+def compute_station_statistics(df):
+    """
+    Compute min, max, and range for each station.
+    Range calculation helps identify climate variability.
+    
+    Args:
+        df: DataFrame with temperature data
         
     Returns:
-        DataFrame with columns: Station, min, max, range
+        DataFrame with statistics per station
+        
+    Raises:
+        ValueError: If computation fails
     """
-    # Remove NaN temperatures
-    df = long_df.dropna(subset=['Temperature'])
+    df_clean = df.dropna(subset=['Temperature'])
     
-    # Calculate min, max, and range for each station
-    station_stats = df.groupby('Station')['Temperature'].agg(['min', 'max'])
-    station_stats['range'] = station_stats['max'] - station_stats['min']
+    if df_clean.empty:
+        raise ValueError("No valid temperature data after removing NaN values")
     
-    return station_stats
+    try:
+        stats = df_clean.groupby('Station')['Temperature'].agg(['min', 'max'])
+        stats['range'] = stats['max'] - stats['min']
+    except KeyError as e:
+        raise ValueError(f"Error computing statistics: {e}")
+    
+    return stats
 
 
 def find_largest_range_stations(long_df):
     """
-    Find station(s) with the largest temperature range.
-    Handles ties by returning all stations with maximum range.
+    Find stations with maximum temperature range.
+    Handles ties by returning all stations with the same maximum range.
     
     Args:
         long_df: DataFrame in long format
         
     Returns:
-        List of dictionaries with station info
+        List of dictionaries with station information
+        
+    Raises:
+        ValueError: If analysis cannot be completed
     """
     print("Finding largest temperature range...")
     
-    # Calculate ranges
-    station_stats = calculate_station_ranges(long_df)
+    validate_temperature_data(long_df)
+    station_stats = compute_station_statistics(long_df)
     
-    # Find maximum range
     max_range = station_stats['range'].max()
     
-    # Get all stations with max range
+    if pd.isna(max_range):
+        raise ValueError("Could not calculate maximum range")
+    
     max_stations = station_stats[station_stats['range'] == max_range]
     
-    # Format results
     results = []
     for station, row in max_stations.iterrows():
         results.append({
@@ -53,7 +84,7 @@ def find_largest_range_stations(long_df):
             'max': row['max'],
             'min': row['min']
         })
-        print(f"  {station}: Range {row['range']:.1f}°C")
+        print(f"  {station}: Range {row['range']:.{OUTPUT_PRECISION}f}°C")
     
     print()
     return results
