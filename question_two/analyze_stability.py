@@ -20,3 +20,23 @@ def calculate_station_std(long_df):
     station_std = df.groupby('Station')['Temperature'].std()
     
     return station_std
+
+
+def find_most_stable(station_std):
+    """
+    Find station(s) with lowest standard deviation (most stable).
+    
+    Args:
+        station_std: Series of standard deviations
+        
+    Returns:
+        List of dictionaries with station and std
+    """
+    min_std = station_std.min()
+    most_stable = station_std[station_std == min_std]
+    
+    results = []
+    for station, std in most_stable.items():
+        results.append({'station': station, 'std': std})
+    
+    return results
