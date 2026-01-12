@@ -41,6 +41,13 @@ def main():
         seasonal_avg = calculate_seasonal_averages(long_df.copy())
         save_seasonal_averages(seasonal_avg, OUTPUT_SEASONAL_AVG)
         print()
+        
+        # Step 4: Temperature range
+        print("[Step 4/5] Finding largest temperature ranges...")
+        range_stations = find_largest_range_stations(long_df.copy())
+        save_range_results(range_stations, OUTPUT_TEMP_RANGE)
+        print()
+
 
 
 
